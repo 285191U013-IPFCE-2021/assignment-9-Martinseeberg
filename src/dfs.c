@@ -2,97 +2,121 @@
  * Search an expression using DFS.
  */
 
-#include <stdio.h>		/* scanf, printf */
-#include <stdlib.h>		/* abort */
-#include <stdbool.h>		/* bool, true, false */
-#include "dfs.h"
+#include <stdio.h>   /* scanf, printf */
+#include <stdlib.h>  /* abort */
+#include <stdbool.h> /* bool, true, false */
+#include "../include/dfs.h"
+#include <assert.h>
 
+void DFT(node *root)
 
-void DFT (node * root)
 {
-	// Implement DFS
-	// Hint: You can use print_node, print_tree and/or print_stack.
+  assert(root != NULL);                                         // root cant be NULL, then the  list is empty
+  stack *temp = (struct stack *)malloc(sizeof(struct stack *)); // Making a new stack called temp
+  temp = push(temp, root);                                      //Push root onto stack
+  while (temp != NULL)
+  {
+    node *toppp = temp->node; // Giving toppp new value = temp->node
+    temp = pop(temp);         // Storing pop(temp) in temp
+
+    if (toppp->rchild != NULL)          // Precondition toppp->rchild != NULL
+      temp = push(temp, toppp->rchild); // Pushing toppp->rchild on top of stack
+
+    if (toppp->lchild != NULL)          // Precondition toppp->lchild != NULL
+      temp = push(temp, toppp->lchild); // Pushing toppp->lchild on top of stack
+  }
 }
 
-node *make_node (int num, node * left, node * right)
+node *make_node(int num, node *left, node *right)
 {
-	return 0;
+  struct node *n;                                 // creating a node pointer
+  n = (struct node *)malloc(sizeof(struct node)); // Allocating memory in the heap
+  n->num = num;                                   // Setting the data
+  n->lchild = left;                               // Setting the left children to LEFT
+  n->rchild = right;                              // Setting the right children to RIGHT
+  return n;                                       // Finally returning the created node
 }
 
-void free_node (node * p)
+void free_node(node *p)
 {
-	
+  free_node(p->lchild);
+  free_node(p->rchild);
+  free(p);
 }
 
-
-void print_node (node * p)
+void print_node(node *p)
 {
 
   if (p == NULL)
-    printf ("NULL\n");
+    printf("NULL\n");
   else
-    printf ("%d", p->num);
+    printf("%d", p->num);
 }
 
-
-void print_tree (node * p, int depth)
+void print_tree(node *p, int depth)
 {
   for (int i = 0; i < depth; i = i + 1)
-    printf (" ");
-  printf ("| ");
+    printf(" ");
+  printf("| ");
 
   if (p == NULL)
-    printf ("NULL\n");
+    printf("NULL\n");
   else
-    printf ("[%d]\n", p->num);
-
+    printf("[%d]\n", p->num);
 
   if (p->lchild)
-    {
-      print_tree (p->lchild, depth + 1);
-    }
+  {
+    print_tree(p->lchild, depth + 1);
+  }
 
   if (p->rchild)
-    print_tree (p->rchild, depth + 1);
+    print_tree(p->rchild, depth + 1);
 }
 
-stack *push (stack * topp, node * node)
+stack *push(stack *topp, node *newnode)
 {
-	return 0;
+  struct stack *temp = (struct stack *)malloc(sizeof(struct stack *)); // Creating stack called temp
+  temp->node = newnode;                                                // Setting temp->node = newnode
+  temp->next = topp;                                                   // Setting temp->next = topp
+  return temp;                                                         // Returning temp
 }
 
-bool isEmpty (stack * topp)
+bool isEmpty(stack *topp)
 {
   return false;
 }
 
-node *top (stack * topp)
+node *top(stack *topp)
 {
-	return 0;
+  return 0;
 }
 
-// Utility function to pop topp  
-// element from the stack 
+// Utility function to pop topp
+// element from the stack
 
-stack *pop (stack * topp)
+stack *pop(stack *topp)
 {
-	return 0;
+  stack *toppp;                    // Setting stack pointer toppp
+  printf("%d, ", topp->node->num); // printing the node value/num, It does print even it if says eroor, just scroll up a bit.
+  toppp = topp->next;              // poppin the top element.
+  free(topp);                      // Freeing the topp element
+  return toppp;                    // Returning topp
 }
 
-void print_stack (stack * topp)
+void print_stack(stack *topp)
 {
   struct stack *temp = topp;
 
   while (temp != NULL)
-    {
+  {
 
-      print_node (temp->node);
-      printf ("\n");
+    print_node(temp->node);
+    printf("\n");
 
-      temp = temp->next;
-    }
+    temp = temp->next;
+  }
 
-  printf ("====\n");
+  printf("====\n");
 
   return;
 }
